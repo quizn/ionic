@@ -13,6 +13,15 @@ angular.module('starter.controllers', [])
     };
 
 
+      
+    $scope.options = {
+      file: "http://www.youtube.com/watch?v=YgQFgLcHmgU",
+      height: 240,
+      width: 300,
+      controlbar: "bottom",
+      autostart: false
+      
+    };
     
 
     $scope.doSomething = function() {
@@ -20,7 +29,6 @@ angular.module('starter.controllers', [])
     };
 
     
-
     //AIzaSyBz9DxmDoB6PbW_90p3FvdXB3mCkIirDQs
     
     /*

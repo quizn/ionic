@@ -5,7 +5,7 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter.services'])
+angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter.services', 'angular-jwplayer'])
 
 .run(function($ionicPlatform, $rootScope, $cordovaPush, $http, $cordovaToast) {
   $ionicPlatform.ready(function() {
@@ -24,7 +24,7 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter
     config = {
       "senderID": "816715518674"
     };
-    
+  
     
     $cordovaPush.register(config).then(function(result) {
 
