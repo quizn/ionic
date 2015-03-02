@@ -5,7 +5,7 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter.services', 'angular-jwplayer'])
+angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter.services', 'rootScope'])
 
 .run(function($ionicPlatform, $rootScope, $cordovaPush, $http, $cordovaToast) {
   $ionicPlatform.ready(function() {
@@ -20,75 +20,46 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter
     }
 
 
-    var config = null;
-    config = {
-      "senderID": "816715518674"
+    var iosConfig = {
+      "badge": true,
+      "sound": true,
+      "alert": true
     };
-  
-    
-    $cordovaPush.register(config).then(function(result) {
 
+    $cordovaPush.register(iosConfig).then(function(result) {
+      // Success -- send deviceToken to server, and store for future use
+      console.log("result: " + result);
+      $rootScope.deviceToken = result.deviceToken;
+      //$http.post("http://server.co/", {user: "Bob", tokenID: result.deviceToken});
     }, function(err) {
-      alert('@@푸시 등록 실패@@');
+      alert("Registration error: " + err);
     });
 
-  
+
     $rootScope.$on('$cordovaPush:notificationReceived', function(event, notification) {
-      
-      switch(notification.event) {
-      case 'registered':
-	
-        if (notification.regid.length > 0 ) {
-	  /*
-	  var req_url = 'http://192.168.0.154:3002?regid=' + notification.regid;
-	  $http.get(req_url).
-	    success(function(data, status, headers, config) {
-	      // this callback will be called asynchronously
-	      // when the response is available
-	    }).
-	    error(function(data, status, headers, config) {
-	      // called asynchronously if an error occurs
-	      // or server returns response with an error status.
-	    });
-	   */
-	  
+      if (notification.alert) {
+        navigator.notification.alert(notification.alert);
+      }
 
-	  
-	  //alert(notification.regid);
-        }
-        break;
+      /*
+      if (notification.sound) {
+        var snd = new Media(event.sound);
+        snd.play();
+      }
+      */
 
-      case 'message':
-	//$rootScope.message = notification.msg;
-	//alert(notification.message);
-	$cordovaToast
-	  .show(notification.message, 'long', 'center')
-	  .then(function(success) {
-	    // success
-	  }, function (error) {
-	    // error
-	  });
-	//alert(cnt++);
-        break;
-
-      case 'error':
-        //alert('GCM error = ' + notification.msg);
-        break;
-
-      default:
-        alert('An unknown GCM event has occurred');
-        break;
+      if (notification.badge) {
+        $cordovaPush.setBadgeNumber(notification.badge).then(function(result) {
+          // Success!
+        }, function(err) {
+          // An error occurred. Show a message to the user
+        });
       }
     });
-    
 
     
   });
-  /*
-  var androidConfig = {
-    "senderID": "AIzaSyBz9DxmDoB6PbW_90p3FvdXB3mCkIirDQs"
-  };
-  */
+
  
 })
 
